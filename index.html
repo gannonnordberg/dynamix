@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dynamix">
+<title>Dynamix Condensed</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0f1a;--surface:#0d1520;--border:#1a2a3a;
+  --text:#e8eef5;--muted:#667788;--dim:#556677;
+  --blue:#4a9eda;--green:#4ada8e;--amber:#f0a500;
+  --C:401.92;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Mono','Courier New',monospace;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{padding-bottom:env(safe-area-inset-bottom)}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#2a3a5a;border-radius:2px}
+
+/* header */
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 20px;position:sticky;top:0;z-index:10}
+.hi{max-width:680px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.15em;color:var(--blue)}
+.logo-sub{font-size:10px;color:var(--muted);letter-spacing:.1em;margin-top:1px}
+.tabs{display:flex;gap:8px}
+.tab{background:none;border:1px solid #2a3a5a;color:var(--muted);padding:7px 14px;border-radius:4px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;cursor:pointer;transition:all .15s}
+.tab.active{background:var(--blue);border-color:var(--blue);color:#fff}
+
+main{max-width:680px;margin:0 auto;padding:18px 18px 48px}
+
+/* stats */
+.stats{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 14px;flex:1;min-width:76px}
+.sv{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--blue);letter-spacing:.1em;line-height:1}
+.sl{font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:3px}
+.toggle-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 12px;display:flex;align-items:center;gap:8px}
+.tl{font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.tog{width:36px;height:20px;border-radius:10px;background:#2a3a5a;cursor:pointer;position:relative;transition:background .2s;border:none;flex-shrink:0}
+.tog.on{background:var(--blue)}
+.togk{position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .2s;pointer-events:none}
+.tog.on .togk{left:19px}
+
+/* reference */
+.phase-block{border-left:3px solid var(--blue);padding-left:14px;margin-bottom:24px}
+.ph{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
+.plabel{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:.2em}
+.pname{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.08em;color:var(--text)}
+.ptime{font-size:11px;color:var(--muted);margin-left:auto}
+.psub{font-size:10px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:9px}
+.mr{display:flex;align-items:center;padding:8px 10px;border-radius:6px;margin-bottom:3px;transition:background .15s}
+.mr:hover{background:rgba(255,255,255,.04)}
+.mr.maybe{opacity:.65}
+.mr.cur{background:rgba(74,158,218,.15);border-left:3px solid var(--blue);padding-left:7px}
+.mr.gone{opacity:.22}
+.mn{width:22px;font-size:10px;color:#4a6a8a;font-family:'Bebas Neue',sans-serif;flex-shrink:0}
+.mm{flex:1;font-size:13px;color:#ccd9e8}
+.ms{font-size:11px;color:var(--muted);width:70px;flex-shrink:0}
+.md{font-size:10px;color:#4a6a8a;font-family:'Bebas Neue',sans-serif;letter-spacing:.1em;flex-shrink:0}
+.badge{font-size:9px;letter-spacing:.1em;padding:2px 6px;border-radius:2px;text-transform:uppercase;background:#2a3a1a;color:#7aaa4a;margin-left:6px}
+
+.audio-note{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:11px 14px;margin-bottom:14px;font-size:10px;color:var(--dim);line-height:1.7}
+.audio-note strong{color:var(--muted);font-size:11px;display:block;margin-bottom:3px}
+
+/* ── READY SCREEN ── */
+#view-ready{display:none}
+.ready-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:32px 20px;margin-bottom:14px;text-align:center}
+.ready-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.12em;color:var(--blue);margin-bottom:6px}
+.ready-sub{font-size:11px;color:var(--muted);letter-spacing:.06em;margin-bottom:24px}
+.ready-stats{display:flex;gap:12px;justify-content:center;margin-bottom:28px;flex-wrap:wrap}
+.rstat{text-align:center}
+.rstat-v{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--text);letter-spacing:.1em}
+.rstat-l{font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.big-start{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:18px;width:100%;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.15em;cursor:pointer;transition:filter .15s,transform .1s}
+.big-start:hover{filter:brightness(1.1)}
+.big-start:active{transform:scale(.98)}
+.back-ref{background:none;border:1px solid #2a3a5a;color:var(--muted);border-radius:4px;padding:10px;width:100%;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;cursor:pointer;margin-top:10px}
+
+/* ── WORKOUT SCREEN ── */
+#view-workout{display:none}
+.timer-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:22px 18px;margin-bottom:12px;text-align:center;transition:background .35s,border-color .35s}
+.timer-card.rest-mode{background:#161000;border-color:var(--amber)}
+.tpl{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
+.tpl.rest-label{color:var(--amber)}
+
+.ring-wrap{position:relative;width:148px;height:148px;margin:0 auto 16px}
+#trk{stroke:var(--border)}
+#fil{stroke:var(--blue);stroke-linecap:round;transition:stroke-dashoffset .85s linear,stroke .3s}
+.rc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#tnum{font-family:'Bebas Neue',sans-serif;font-size:52px;line-height:1;transition:color .3s}
+.rsec{font-size:9px;color:var(--muted);letter-spacing:.12em}
+
+#mlw{margin-bottom:4px}
+#mdn{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:.06em;color:var(--blue)}
+#mds{font-size:13px;color:#99aabb;margin-top:3px}
+#rlw{display:none}
+.rnl{font-size:11px;color:var(--amber);letter-spacing:.14em;margin-bottom:6px}
+#rnn{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--text);letter-spacing:.06em}
+#rns{font-size:13px;color:#99aabb;margin-top:3px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.pulse{animation:pulse 1.1s ease-in-out infinite}
+
+.controls{display:flex;gap:10px;justify-content:center;margin-top:18px}
+.cb{border:none;border-radius:4px;cursor:pointer;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.05em;padding:10px 14px;transition:filter .15s,transform .1s}
+.cb:active{transform:scale(.97)}
+.cb.sec{background:#1a2a3a;color:var(--muted)}
+.cb.pri{background:#27ae60;color:#fff;padding:10px 26px}
+
+.prog-wrap{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.pc{font-size:10px;color:var(--muted);letter-spacing:.08em;white-space:nowrap}
+.pt{flex:1;height:4px;background:#1a2a3a;border-radius:2px;overflow:hidden}
+#pf{height:100%;background:var(--blue);border-radius:2px;transition:width .4s;width:0%}
+#pn{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px}
+
+.aleg{background:#0a0d12;border:1px solid var(--border);border-radius:6px;padding:9px 14px;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap}
+.ali{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--dim)}
+
+.queue{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px;max-height:180px;overflow-y:auto;margin-bottom:12px}
+
+.end-btn{background:none;border:1px solid #2a3a5a;color:var(--muted);border-radius:4px;padding:10px;width:100%;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;cursor:pointer}
+
+/* done */
+#done-screen{display:none;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:52px 20px;text-align:center}
+.dt{font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--green);letter-spacing:.1em;margin-bottom:8px}
+.ds{font-size:13px;color:var(--muted);margin-bottom:24px}
+.db{background:var(--blue);color:#fff;border:none;border-radius:4px;padding:12px 32px;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.08em;cursor:pointer}
+
+.start-btn{background:var(--blue);color:#fff;border:none;border-radius:6px;padding:14px;width:100%;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.12em;cursor:pointer;transition:filter .15s}
+.start-btn:hover{filter:brightness(1.1)}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="hi">
+      <div>
+        <div class="logo">DYNAMIX CONDENSED</div>
+        <div class="logo-sub">CUSTOM MOBILITY — GANNON NORDBERG</div>
+      </div>
+      <div class="tabs">
+        <button class="tab active" id="tab-ref" onclick="goRef()">REFERENCE</button>
+        <button class="tab" id="tab-work" onclick="goReady()">WORKOUT</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Stats (always visible) -->
+    <div class="stats">
+      <div class="stat-card"><div class="sv" id="sv-time">--</div><div class="sl">Total time</div></div>
+      <div class="stat-card"><div class="sv" id="sv-moves">--</div><div class="sl">Moves</div></div>
+      <div class="stat-card"><div class="sv">5 sec</div><div class="sl">Rest buffer</div></div>
+      <div class="toggle-card">
+        <div class="tl">Maybes</div>
+        <button class="tog" id="mtog" onclick="toggleMaybe()"><div class="togk"></div></button>
+      </div>
+    </div>
+
+    <!-- REFERENCE -->
+    <div id="view-ref">
+      <div id="phase-list"></div>
+      <div class="audio-note">
+        <strong>Audible cues in workout mode</strong>
+        🔔🔔 Double beep = GO &nbsp;·&nbsp; 🔕 Single beep = REST &nbsp;·&nbsp; Soft ticks at 3-2-1 during rest
+      </div>
+      <button class="start-btn" onclick="goReady()">GO TO WORKOUT →</button>
+    </div>
+
+    <!-- READY -->
+    <div id="view-ready">
+      <div class="ready-card">
+        <div class="ready-title">READY TO GO?</div>
+        <div class="ready-sub" id="ready-sub"></div>
+        <div class="ready-stats">
+          <div class="rstat"><div class="rstat-v" id="rs-moves">--</div><div class="rstat-l">moves</div></div>
+          <div class="rstat"><div class="rstat-v" id="rs-time">--</div><div class="rstat-l">total time</div></div>
+          <div class="rstat"><div class="rstat-v">5s</div><div class="rstat-l">rest between</div></div>
+        </div>
+        <button class="big-start" id="big-start-btn" onclick="beginWorkout()">▶ START WORKOUT</button>
+      </div>
+      <button class="back-ref" onclick="goRef()">← BACK TO REFERENCE</button>
+    </div>
+
+    <!-- WORKOUT -->
+    <div id="view-workout">
+      <div id="done-screen">
+        <div class="dt">DONE</div>
+        <div class="ds" id="done-sub"></div>
+        <button class="db" onclick="goRef()">BACK TO REFERENCE</button>
+      </div>
+
+      <div id="active-workout">
+        <div class="timer-card" id="tcard">
+          <div class="tpl" id="tpl">PHASE 1 · GROUND OPENING</div>
+          <div class="ring-wrap">
+            <svg width="148" height="148" style="transform:rotate(-90deg)">
+              <circle id="trk" cx="74" cy="74" r="64" fill="none" stroke-width="7"/>
+              <circle id="fil" cx="74" cy="74" r="64" fill="none" stroke-width="7"
+                stroke-dasharray="401.92" stroke-dashoffset="401.92"/>
+            </svg>
+            <div class="rc">
+              <div id="tnum">30</div>
+              <div class="rsec">SEC</div>
+            </div>
+          </div>
+          <div id="mlw">
+            <div id="mdn">Leg Lift</div>
+            <div id="mds">Left</div>
+          </div>
+          <div id="rlw">
+            <div class="rnl">NEXT UP</div>
+            <div id="rnn" class="pulse"></div>
+            <div id="rns"></div>
+          </div>
+          <div class="controls">
+            <button class="cb sec" onclick="prevMove()">← PREV</button>
+            <button class="cb pri" id="pbtn" onclick="togglePause()">PAUSE</button>
+            <button class="cb sec" onclick="skipMove()">SKIP →</button>
+          </div>
+        </div>
+
+        <div class="prog-wrap">
+          <div class="pc" id="pcnt">1 / 21</div>
+          <div class="pt"><div id="pf"></div></div>
+          <div id="pn"></div>
+        </div>
+
+        <div class="aleg">
+          <div class="ali"><span>🔔🔔</span><span>GO</span></div>
+          <div class="ali"><span>🔕</span><span>REST</span></div>
+          <div class="ali"><span>·</span><span>3-2-1 ticks</span></div>
+        </div>
+
+        <div class="queue" id="queue"></div>
+        <button class="end-btn" onclick="goRef()">END WORKOUT</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────
+const PHASES = [
+  { id:"p1", label:"Phase 1", name:"Ground Opening", subtitle:"Supine & prone — bilateral", accent:"#4a9eda",
+    moves:[
+      {name:"Leg Lift",      side:"Left",         dur:30, type:"core"},
+      {name:"Leg Lift",      side:"Right",        dur:30, type:"core"},
+      {name:"Adductor Lift", side:"Right",        dur:30, type:"core"},
+      {name:"Adductor Lift", side:"Left",         dur:30, type:"core"},
+      {name:"Glute Lift",    side:"Right",        dur:30, type:"maybe"},
+      {name:"Glute Lift",    side:"Left",         dur:30, type:"maybe"},
+    ]},
+  { id:"p2", label:"Phase 2", name:"Floor Dynamic Mobility", subtitle:"Deep hip & shoulder work", accent:"#4ada8e",
+    moves:[
+      {name:"Forearm Plank",    side:"Left",         dur:30, type:"maybe"},
+      {name:"Forearm Plank",    side:"Right",        dur:30, type:"maybe"},
+      {name:"Scorpion",         side:"Right",        dur:30, type:"core"},
+      {name:"Scorpion",         side:"Left",         dur:30, type:"core"},
+      {name:"Shoulder Stretch", side:"Child's Pose", dur:30, type:"core"},
+      {name:"Ham/Hip Rocker",   side:"Right",        dur:30, type:"core"},
+      {name:"Ham/Hip Rocker",   side:"Left",         dur:30, type:"core"},
+      {name:"Groiners",         side:"Right",        dur:30, type:"core"},
+      {name:"Groiners",         side:"Left",         dur:30, type:"core"},
+      {name:"Pigeon",           side:"Right",        dur:30, type:"core"},
+      {name:"Pigeon",           side:"Left",         dur:30, type:"core"},
+    ]},
+  { id:"p3", label:"Phase 3", name:"Standing Dynamic Work", subtitle:"Loaded movement patterns", accent:"#da4acd",
+    moves:[
+      {name:"Alternating Hip Circles",         side:"Both",  dur:30, type:"core"},
+      {name:"Polka Plus Reverse Lunge",        side:"Right", dur:30, type:"core"},
+      {name:"Polka Plus Reverse Lunge",        side:"Left",  dur:30, type:"core"},
+      {name:"Alternating Double Knee Pulls",   side:"Both",  dur:30, type:"core"},
+      {name:"Alternating Double Quad Stretch", side:"Both",  dur:30, type:"core"},
+    ]},
+  { id:"p4", label:"Phase 4", name:"Floor Recovery", subtitle:"Cooldown & spinal release", accent:"#da8a4a",
+    moves:[
+      {name:"Alternating Double Knee Pull",   side:"Both", dur:30, type:"core"},
+      {name:"Alternating Double Pigeon Pull", side:"Both", dur:30, type:"core"},
+      {name:"Spinal Twist",                  side:"Both", dur:30, type:"core"},
+      {name:"Superman",                      side:"Both", dur:30, type:"core"},
+    ]},
+];
+const REST = 5;
+const CIRC = 401.92;
+
+// ── STATE ─────────────────────────────────────────────────────────────
+let includeMaybe = false;
+let stage = "idle";
+let idx = 0;
+let tLeft = 0;
+let running = false;
+let ivl = null;
+let actx = null;
+
+function moves() {
+  return PHASES.flatMap(p => p.moves.map(m => ({...m, phase:p})))
+               .filter(m => m.type === "core" || includeMaybe);
+}
+
+function fmt(s) {
+  return Math.floor(s/60) + ":" + String(s%60).padStart(2,"0");
+}
+
+function totalTime(ms) {
+  return ms.reduce((a,m)=>a+m.dur,0) + (ms.length-1)*REST;
+}
+
+// ── AUDIO ─────────────────────────────────────────────────────────────
+function initAudio() {
+  if (!actx) actx = new (window.AudioContext||window.webkitAudioContext)();
+  if (actx.state==="suspended") actx.resume();
+}
+
+function beep(freq, dur, gain, delay) {
+  if (!actx) return;
+  try {
+    const o = actx.createOscillator();
+    const g = actx.createGain();
+    o.connect(g); g.connect(actx.destination);
+    o.type="sine"; o.frequency.value=freq;
+    const t = actx.currentTime + (delay||0);
+    g.gain.setValueAtTime(0.001,t);
+    g.gain.linearRampToValueAtTime(gain||0.4, t+0.015);
+    g.gain.exponentialRampToValueAtTime(0.001, t+dur);
+    o.start(t); o.stop(t+dur+0.05);
+  } catch(_){}
+}
+
+function playGo()   { beep(880,0.15,0.45); beep(1200,0.2,0.5,0.18); }
+function playRest() { beep(480,0.3,0.35); }
+function playTick() { beep(720,0.08,0.2); }
+
+// ── TIMER ─────────────────────────────────────────────────────────────
+function clearTmr() { if(ivl){clearInterval(ivl);ivl=null;} }
+
+function startTmr() {
+  clearTmr();
+  ivl = setInterval(()=>{
+    tLeft--;
+    if (stage==="rest" && tLeft>0 && tLeft<=3) playTick();
+    if (tLeft<=0) {
+      clearTmr();
+      if (stage==="move") endMove();
+      else if (stage==="rest") endRest();
+      return;
+    }
+    paint();
+  }, 1000);
+}
+
+function endMove() {
+  const ms = moves();
+  if (idx+1 < ms.length) {
+    playRest();
+    stage="rest"; tLeft=REST;
+    startTmr(); paint();
+  } else {
+    stage="done"; running=false;
+    showDone();
+  }
+}
+
+function endRest() {
+  idx++;
+  playGo();
+  stage="move"; tLeft=moves()[idx].dur;
+  startTmr(); paint();
+}
+
+// ── CONTROLS ──────────────────────────────────────────────────────────
+function beginWorkout() {
+  // This is the user gesture — init audio here
+  initAudio();
+  playGo();
+
+  const ms = moves();
+  idx=0; stage="move"; tLeft=ms[0].dur; running=true;
+
+  show("workout");
+  buildQueue();
+  paint();
+  startTmr();
+}
+
+function togglePause() {
+  if (running) {
+    clearTmr(); running=false;
+    setPauseBtn(false);
+  } else {
+    running=true;
+    setPauseBtn(true);
+    startTmr();
+  }
+}
+
+function setPauseBtn(isRunning) {
+  const b = document.getElementById("pbtn");
+  b.textContent = isRunning ? "PAUSE" : "RESUME";
+  b.style.background = isRunning ? "#c0392b" : "#27ae60";
+}
+
+function skipMove() {
+  clearTmr(); running=false;
+  const ms=moves();
+  if (idx+1<ms.length) {
+    idx++; stage="move"; tLeft=ms[idx].dur;
+    paint(); setPauseBtn(false);
+  } else { stage="done"; showDone(); }
+}
+
+function prevMove() {
+  clearTmr(); running=false;
+  idx=Math.max(0,idx-1);
+  stage="move"; tLeft=moves()[idx].dur;
+  paint(); setPauseBtn(false);
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────
+function paint() {
+  const ms=moves();
+  const cur=ms[idx];
+  const nxt=ms[idx+1];
+  const isRest=stage==="rest";
+  const total=isRest?REST:cur.dur;
+  const progress=Math.min(1,(total-tLeft)/total);
+  const offset=CIRC*(1-progress);
+
+  // ring
+  document.getElementById("tnum").textContent=tLeft;
+  document.getElementById("tnum").style.color=isRest?"#f0a500":"#e8eef5";
+  document.getElementById("fil").style.strokeDashoffset=offset;
+  document.getElementById("fil").style.stroke=isRest?"#f0a500":(cur?.phase?.accent||"#4a9eda");
+
+  // card
+  const card=document.getElementById("tcard");
+  card.style.background=isRest?"#161000":"#0d1520";
+  card.style.borderColor=isRest?"#f0a500":"#1a2a3a";
+
+  // phase label
+  const pl=document.getElementById("tpl");
+  pl.textContent=isRest?"REST — GET READY":`${cur?.phase?.label} · ${cur?.phase?.name}`;
+  pl.style.color=isRest?"#f0a500":(cur?.phase?.accent||"#4a9eda");
+
+  // move vs rest labels
+  const mlw=document.getElementById("mlw");
+  const rlw=document.getElementById("rlw");
+  if(isRest){
+    mlw.style.display="none"; rlw.style.display="block";
+    document.getElementById("rnn").textContent=nxt?.name||"";
+    document.getElementById("rns").textContent=nxt?.side||"";
+  } else {
+    mlw.style.display="block"; rlw.style.display="none";
+    const dn=document.getElementById("mdn");
+    dn.textContent=cur?.name||"";
+    dn.style.color=cur?.phase?.accent||"#4a9eda";
+    document.getElementById("mds").textContent=cur?.side||"";
+  }
+
+  // progress
+  document.getElementById("pf").style.width=(idx/ms.length*100)+"%";
+  document.getElementById("pcnt").textContent=`${idx+1} / ${ms.length}`;
+  document.getElementById("pn").textContent=(!isRest&&nxt)?`next: ${nxt.name}`:"";
+
+  // queue highlight
+  document.querySelectorAll(".qr").forEach((r,i)=>{
+    r.className="mr qr"+(i===idx&&!isRest?" cur":"")+(i<idx?" gone":"");
+  });
+}
+
+function buildQueue() {
+  const ms=moves();
+  document.getElementById("queue").innerHTML=ms.map((m,i)=>`
+    <div class="mr qr${i===idx?" cur":""}${i<idx?" gone":""}" data-i="${i}">
+      <div class="mn">${i+1}</div>
+      <div class="mm">${m.name}</div>
+      <div class="ms">${m.side}</div>
+      <div class="md">30s</div>
+    </div>`).join("");
+}
+
+function showDone() {
+  document.getElementById("active-workout").style.display="none";
+  document.getElementById("done-screen").style.display="block";
+  document.getElementById("done-sub").textContent=`${moves().length} moves completed. Nice work.`;
+}
+
+function renderRef() {
+  const ms=moves();
+  document.getElementById("sv-time").textContent=fmt(totalTime(ms));
+  document.getElementById("sv-moves").textContent=ms.length;
+
+  document.getElementById("phase-list").innerHTML=PHASES.map(p=>{
+    const pm=p.moves.filter(m=>m.type==="core"||includeMaybe);
+    if(!pm.length) return "";
+    const pt=pm.reduce((a,m)=>a+m.dur,0)+(pm.length-1)*REST;
+    return `<div class="phase-block" style="border-color:${p.accent}">
+      <div class="ph">
+        <div class="plabel" style="color:${p.accent}">${p.label}</div>
+        <div class="pname">${p.name}</div>
+        <div class="ptime">${fmt(pt)}</div>
+      </div>
+      <div class="psub">${p.subtitle}</div>
+      ${pm.map((m,i)=>`<div class="mr${m.type==="maybe"?" maybe":""}">
+        <div class="mn">${i+1}</div>
+        <div class="mm">${m.name}${m.type==="maybe"?'<span class="badge">maybe</span>':""}</div>
+        <div class="ms">${m.side}</div>
+        <div class="md">30 SEC</div>
+      </div>`).join("")}
+    </div>`;
+  }).join("");
+}
+
+function renderReady() {
+  const ms=moves();
+  document.getElementById("rs-moves").textContent=ms.length;
+  document.getElementById("rs-time").textContent=fmt(totalTime(ms));
+  document.getElementById("ready-sub").textContent=
+    `${ms.length} moves · ${fmt(totalTime(ms))} total · 5 sec rest between each`;
+}
+
+// ── VIEW SWITCHING ────────────────────────────────────────────────────
+function show(v) {
+  ["ref","ready","workout"].forEach(id=>{
+    document.getElementById("view-"+id).style.display= id===v?"block":"none";
+  });
+  document.getElementById("tab-ref").classList.toggle("active",v==="ref");
+  document.getElementById("tab-work").classList.toggle("active",v==="workout"||v==="ready");
+}
+
+function goRef() {
+  clearTmr(); running=false; stage="idle"; idx=0; tLeft=0;
+  document.getElementById("active-workout").style.display="block";
+  document.getElementById("done-screen").style.display="none";
+  setPauseBtn(true);
+  show("ref");
+  renderRef();
+}
+
+function goReady() {
+  clearTmr(); running=false; stage="idle"; idx=0; tLeft=0;
+  document.getElementById("active-workout").style.display="block";
+  document.getElementById("done-screen").style.display="none";
+  renderReady();
+  show("ready");
+}
+
+function toggleMaybe() {
+  includeMaybe=!includeMaybe;
+  document.getElementById("mtog").classList.toggle("on",includeMaybe);
+  renderRef();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────
+goRef();
+</script>
+</body>
+</html>
