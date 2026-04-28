@@ -16,10 +16,11 @@
   --blue:#4a9eda;--green:#4ada8e;--amber:#f0a500;
   --C:401.92;
 }
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Mono','Courier New',monospace;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-body{padding-bottom:env(safe-area-inset-bottom)}
+html,body{min-height:100%;background:#0a0f1a;color:var(--text);font-family:'DM Mono','Courier New',monospace;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{background:#0a0f1a;padding-bottom:env(safe-area-inset-bottom)}
+#app{background:#0a0f1a;min-height:100vh}
 ::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-track{background:#0a0f1a}
 ::-webkit-scrollbar-thumb{background:#2a3a5a;border-radius:2px}
 
 /* header */
@@ -31,7 +32,8 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:1
 .tab{background:none;border:1px solid #2a3a5a;color:var(--muted);padding:7px 14px;border-radius:4px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;cursor:pointer;transition:all .15s}
 .tab.active{background:var(--blue);border-color:var(--blue);color:#fff}
 
-main{max-width:680px;margin:0 auto;padding:18px 18px 48px}
+main{max-width:680px;margin:0 auto;padding:18px 18px 48px;background:#0a0f1a}
+#view-ref{background:#0a0f1a}
 
 /* stats */
 .stats{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
@@ -46,22 +48,22 @@ main{max-width:680px;margin:0 auto;padding:18px 18px 48px}
 .tog.on .togk{left:19px}
 
 /* reference */
-.phase-block{border-left:3px solid var(--blue);padding-left:14px;margin-bottom:24px}
+.phase-block{background:#0d1520;border:1px solid #1a2a3a;border-left:3px solid var(--blue);border-radius:8px;padding:14px 14px 10px;margin-bottom:16px}
 .ph{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
 .plabel{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:.2em}
-.pname{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.08em;color:var(--text)}
-.ptime{font-size:11px;color:var(--muted);margin-left:auto}
-.psub{font-size:10px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:9px}
+.pname{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.08em;color:#ffffff}
+.ptime{font-size:11px;color:#a0b4c8;margin-left:auto}
+.psub{font-size:10px;color:#8aaccc;letter-spacing:.08em;text-transform:uppercase;margin-bottom:9px}
 .mr{display:flex;align-items:center;padding:8px 10px;border-radius:6px;margin-bottom:3px;transition:background .15s}
-.mr:hover{background:rgba(255,255,255,.04)}
-.mr.maybe{opacity:.65}
+.mr:hover{background:rgba(255,255,255,.06)}
+.mr.maybe{opacity:.75}
 .mr.cur{background:rgba(74,158,218,.15);border-left:3px solid var(--blue);padding-left:7px}
 .mr.gone{opacity:.22}
-.mn{width:22px;font-size:10px;color:#4a6a8a;font-family:'Bebas Neue',sans-serif;flex-shrink:0}
-.mm{flex:1;font-size:13px;color:#ccd9e8}
-.ms{font-size:11px;color:var(--muted);width:70px;flex-shrink:0}
-.md{font-size:10px;color:#4a6a8a;font-family:'Bebas Neue',sans-serif;letter-spacing:.1em;flex-shrink:0}
-.badge{font-size:9px;letter-spacing:.1em;padding:2px 6px;border-radius:2px;text-transform:uppercase;background:#2a3a1a;color:#7aaa4a;margin-left:6px}
+.mn{width:22px;font-size:10px;color:#7a9abb;font-family:'Bebas Neue',sans-serif;flex-shrink:0}
+.mm{flex:1;font-size:13px;color:#ffffff;font-weight:500}
+.ms{font-size:11px;color:#b0c8e0;width:70px;flex-shrink:0}
+.md{font-size:10px;color:#7a9abb;font-family:'Bebas Neue',sans-serif;letter-spacing:.1em;flex-shrink:0}
+.badge{font-size:9px;letter-spacing:.1em;padding:2px 6px;border-radius:2px;text-transform:uppercase;background:#2a3a1a;color:#8acc5a;margin-left:6px}
 
 .audio-note{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:11px 14px;margin-bottom:14px;font-size:10px;color:var(--dim);line-height:1.7}
 .audio-note strong{color:var(--muted);font-size:11px;display:block;margin-bottom:3px}
@@ -95,8 +97,8 @@ main{max-width:680px;margin:0 auto;padding:18px 18px 48px}
 .rsec{font-size:9px;color:var(--muted);letter-spacing:.12em}
 
 #mlw{margin-bottom:4px}
-#mdn{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:.06em;color:var(--blue)}
-#mds{font-size:13px;color:#99aabb;margin-top:3px}
+#mdn{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:.06em;color:#ffffff;text-shadow:0 0 20px rgba(74,158,218,0.4)}
+#mds{font-size:16px;color:#c8dff0;margin-top:4px;font-weight:500;letter-spacing:.04em}
 #rlw{display:none}
 .rnl{font-size:11px;color:var(--amber);letter-spacing:.14em;margin-bottom:6px}
 #rnn{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--text);letter-spacing:.06em}
@@ -245,16 +247,20 @@ main{max-width:680px;margin:0 auto;padding:18px 18px 48px}
 <script>
 // ── DATA ──────────────────────────────────────────────────────────────
 const PHASES = [
-  { id:"p1", label:"Phase 1", name:"Ground Opening", subtitle:"Supine & prone — bilateral", accent:"#4a9eda",
+  { id:"p0", label:"Phase 1", name:"Floor Arm Slides", subtitle:"Supine shoulder mobility", accent:"#7b68ee",
+    moves:[
+      {name:"Floor Arm Slides", side:"Both", dur:30, type:"core"},
+    ]},
+  { id:"p1", label:"Phase 2", name:"Ground Opening", subtitle:"Supine & prone — bilateral", accent:"#4a9eda",
     moves:[
       {name:"Leg Lift",      side:"Left",         dur:30, type:"core"},
-      {name:"Leg Lift",      side:"Right",        dur:30, type:"core"},
       {name:"Adductor Lift", side:"Right",        dur:30, type:"core"},
+      {name:"Leg Lift",      side:"Right",        dur:30, type:"core"},
       {name:"Adductor Lift", side:"Left",         dur:30, type:"core"},
       {name:"Glute Lift",    side:"Right",        dur:30, type:"maybe"},
       {name:"Glute Lift",    side:"Left",         dur:30, type:"maybe"},
     ]},
-  { id:"p2", label:"Phase 2", name:"Floor Dynamic Mobility", subtitle:"Deep hip & shoulder work", accent:"#4ada8e",
+  { id:"p2", label:"Phase 3", name:"Floor Dynamic Mobility", subtitle:"Deep hip & shoulder work", accent:"#4ada8e",
     moves:[
       {name:"Forearm Plank",    side:"Left",         dur:30, type:"maybe"},
       {name:"Forearm Plank",    side:"Right",        dur:30, type:"maybe"},
@@ -268,7 +274,7 @@ const PHASES = [
       {name:"Pigeon",           side:"Right",        dur:30, type:"core"},
       {name:"Pigeon",           side:"Left",         dur:30, type:"core"},
     ]},
-  { id:"p3", label:"Phase 3", name:"Standing Dynamic Work", subtitle:"Loaded movement patterns", accent:"#da4acd",
+  { id:"p3", label:"Phase 4", name:"Standing Dynamic Work", subtitle:"Loaded movement patterns", accent:"#da4acd",
     moves:[
       {name:"Alternating Hip Circles",         side:"Both",  dur:30, type:"core"},
       {name:"Polka Plus Reverse Lunge",        side:"Right", dur:30, type:"core"},
@@ -276,12 +282,11 @@ const PHASES = [
       {name:"Alternating Double Knee Pulls",   side:"Both",  dur:30, type:"core"},
       {name:"Alternating Double Quad Stretch", side:"Both",  dur:30, type:"core"},
     ]},
-  { id:"p4", label:"Phase 4", name:"Floor Recovery", subtitle:"Cooldown & spinal release", accent:"#da8a4a",
+  { id:"p4", label:"Phase 5", name:"Floor Recovery", subtitle:"Cooldown & spinal release", accent:"#da8a4a",
     moves:[
-      {name:"Alternating Double Knee Pull",   side:"Both", dur:30, type:"core"},
       {name:"Alternating Double Pigeon Pull", side:"Both", dur:30, type:"core"},
       {name:"Spinal Twist",                  side:"Both", dur:30, type:"core"},
-      {name:"Superman",                      side:"Both", dur:30, type:"core"},
+      {name:"Prone Y-T-W",                   side:"Both", dur:30, type:"core"},
     ]},
 ];
 const REST = 5;
