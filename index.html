@@ -40,12 +40,6 @@ main{max-width:680px;margin:0 auto;padding:18px 18px 48px;background:#0a0f1a}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 14px;flex:1;min-width:76px}
 .sv{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--blue);letter-spacing:.1em;line-height:1}
 .sl{font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:3px}
-.toggle-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 12px;display:flex;align-items:center;gap:8px}
-.tl{font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
-.tog{width:36px;height:20px;border-radius:10px;background:#2a3a5a;cursor:pointer;position:relative;transition:background .2s;border:none;flex-shrink:0}
-.tog.on{background:var(--blue)}
-.togk{position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .2s;pointer-events:none}
-.tog.on .togk{left:19px}
 
 /* reference */
 .phase-block{background:#0d1520;border:1px solid #1a2a3a;border-left:3px solid var(--blue);border-radius:8px;padding:14px 14px 10px;margin-bottom:16px}
@@ -54,11 +48,17 @@ main{max-width:680px;margin:0 auto;padding:18px 18px 48px;background:#0a0f1a}
 .pname{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.08em;color:#ffffff}
 .ptime{font-size:11px;color:#a0b4c8;margin-left:auto}
 .psub{font-size:10px;color:#8aaccc;letter-spacing:.08em;text-transform:uppercase;margin-bottom:9px}
-.mr{display:flex;align-items:center;padding:8px 10px;border-radius:6px;margin-bottom:3px;transition:background .15s}
+.mr{display:flex;align-items:center;padding:8px 10px;border-radius:6px;margin-bottom:0;transition:background .15s;cursor:pointer;flex-wrap:wrap}
 .mr:hover{background:rgba(255,255,255,.06)}
 .mr.maybe{opacity:.75}
 .mr.cur{background:rgba(74,158,218,.15);border-left:3px solid var(--blue);padding-left:7px}
 .mr.gone{opacity:.22}
+.mr.open{background:rgba(255,255,255,.05);border-radius:6px 6px 0 0;margin-bottom:0}
+.mr-top{display:flex;align-items:center;width:100%}
+.mr-cue{width:100%;font-size:11px;color:#8aaccc;line-height:1.55;padding:8px 10px 10px 22px;display:none}
+.mr.open .mr-cue{display:block}
+.mr-chevron{font-size:10px;color:#4a6a8a;margin-left:6px;transition:transform .2s;flex-shrink:0}
+.mr.open .mr-chevron{transform:rotate(90deg)}
 .mn{width:22px;font-size:10px;color:#7a9abb;font-family:'Bebas Neue',sans-serif;flex-shrink:0}
 .mm{flex:1;font-size:13px;color:#ffffff;font-weight:500}
 .ms{font-size:11px;color:#b0c8e0;width:70px;flex-shrink:0}
@@ -99,6 +99,7 @@ main{max-width:680px;margin:0 auto;padding:18px 18px 48px;background:#0a0f1a}
 #mlw{margin-bottom:4px}
 #mdn{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:.06em;color:#ffffff;text-shadow:0 0 20px rgba(74,158,218,0.4)}
 #mds{font-size:16px;color:#c8dff0;margin-top:4px;font-weight:500;letter-spacing:.04em}
+#mcue{font-size:12px;color:#8aaccc;line-height:1.55;margin-top:10px;padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:6px;text-align:left;letter-spacing:.01em}
 #rlw{display:none}
 .rnl{font-size:11px;color:var(--amber);letter-spacing:.14em;margin-bottom:6px}
 #rnn{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--text);letter-spacing:.06em}
@@ -156,10 +157,6 @@ main{max-width:680px;margin:0 auto;padding:18px 18px 48px;background:#0a0f1a}
       <div class="stat-card"><div class="sv" id="sv-time">--</div><div class="sl">Total time</div></div>
       <div class="stat-card"><div class="sv" id="sv-moves">--</div><div class="sl">Moves</div></div>
       <div class="stat-card"><div class="sv">5 sec</div><div class="sl">Rest buffer</div></div>
-      <div class="toggle-card">
-        <div class="tl">Maybes</div>
-        <button class="tog" id="mtog" onclick="toggleMaybe()"><div class="togk"></div></button>
-      </div>
     </div>
 
     <!-- REFERENCE -->
@@ -212,6 +209,7 @@ main{max-width:680px;margin:0 auto;padding:18px 18px 48px;background:#0a0f1a}
           <div id="mlw">
             <div id="mdn">Leg Lift</div>
             <div id="mds">Left</div>
+            <div id="mcue"></div>
           </div>
           <div id="rlw">
             <div class="rnl">NEXT UP</div>
@@ -247,53 +245,47 @@ main{max-width:680px;margin:0 auto;padding:18px 18px 48px;background:#0a0f1a}
 <script>
 // ── DATA ──────────────────────────────────────────────────────────────
 const PHASES = [
-  { id:"p0", label:"Phase 1", name:"Floor Arm Slides", subtitle:"Supine shoulder mobility", accent:"#7b68ee",
+  { id:"p0", label:"Phase 1", name:"Shoulder Mobility", subtitle:"Supine — chest & shoulder opening", accent:"#7b68ee",
     moves:[
-      {name:"Floor Arm Slides", side:"Both", dur:30, type:"core"},
+      {name:"Floor Arm Slides",    side:"Both", dur:30, type:"core", cue:"Lie on back, arms in goalpost position. Slowly slide arms overhead keeping full contact with the floor. Only go as far as you can without losing contact."},
+      {name:"Supine Chest Opener", side:"Both", dur:30, type:"core", cue:"Lie on back, arms out in a T. Let gravity gently pull arms toward the floor. Breathe deeply and relax into the stretch. No forcing."},
     ]},
-  { id:"p1", label:"Phase 2", name:"Ground Opening", subtitle:"Supine & prone — bilateral", accent:"#4a9eda",
+  { id:"p1", label:"Phase 2", name:"Ground Opening", subtitle:"Supine & prone — hamstrings & hip flexors", accent:"#4a9eda",
     moves:[
-      {name:"Leg Lift",      side:"Left",         dur:30, type:"core"},
-      {name:"Adductor Lift", side:"Right",        dur:30, type:"core"},
-      {name:"Leg Lift",      side:"Right",        dur:30, type:"core"},
-      {name:"Adductor Lift", side:"Left",         dur:30, type:"core"},
-      {name:"Glute Lift",    side:"Right",        dur:30, type:"maybe"},
-      {name:"Glute Lift",    side:"Left",         dur:30, type:"maybe"},
+      {name:"Leg Lift", side:"Left",  dur:30, type:"core", cue:"Lie on your back, both legs straight. Keeping the left leg straight, lift it toward the ceiling as high as range allows. Lower slowly. Keep lower back pressed into the floor throughout."},
+      {name:"Leg Lift", side:"Right", dur:30, type:"core", cue:"Lie on your back, both legs straight. Keeping the right leg straight, lift it toward the ceiling as high as range allows. Lower slowly. Keep lower back pressed into the floor throughout."},
     ]},
-  { id:"p2", label:"Phase 3", name:"Floor Dynamic Mobility", subtitle:"Deep hip & shoulder work", accent:"#4ada8e",
+  { id:"p2", label:"Phase 3", name:"Floor Dynamic Mobility", subtitle:"Deep hip, shoulder & spinal work", accent:"#4ada8e",
     moves:[
-      {name:"Forearm Plank",    side:"Left",         dur:30, type:"maybe"},
-      {name:"Forearm Plank",    side:"Right",        dur:30, type:"maybe"},
-      {name:"Scorpion",         side:"Right",        dur:30, type:"core"},
-      {name:"Scorpion",         side:"Left",         dur:30, type:"core"},
-      {name:"Shoulder Stretch", side:"Child's Pose", dur:30, type:"core"},
-      {name:"Ham/Hip Rocker",   side:"Right",        dur:30, type:"core"},
-      {name:"Ham/Hip Rocker",   side:"Left",         dur:30, type:"core"},
-      {name:"Groiners",         side:"Right",        dur:30, type:"core"},
-      {name:"Groiners",         side:"Left",         dur:30, type:"core"},
-      {name:"Pigeon",           side:"Right",        dur:30, type:"core"},
-      {name:"Pigeon",           side:"Left",         dur:30, type:"core"},
+      {name:"Scorpion",          side:"Right",        dur:30, type:"core", cue:"Lie face down, arms out in a T. Bend right knee and sweep it across the body to the left, rotating the hip open. Let the foot reach toward the floor. Keep upper body flat."},
+      {name:"Scorpion",          side:"Left",         dur:30, type:"core", cue:"Lie face down, arms out in a T. Bend left knee and sweep it across the body to the right, rotating the hip open. Let the foot reach toward the floor. Keep upper body flat."},
+      {name:"Shoulder Stretch",  side:"Child's Pose", dur:30, type:"core", cue:"From child's pose, walk arms forward and let chest sink toward the floor. Hold and breathe. To deepen, walk both arms to one side to open the lat."},
+      {name:"Groiners",          side:"Right",        dur:30, type:"core", cue:"From plank, step right foot to the outside of your right hand. Keep back leg straight and hips low. Rock gently forward to deepen the hip flexor and groin stretch."},
+      {name:"Groiners",          side:"Left",         dur:30, type:"core", cue:"From plank, step left foot to the outside of your left hand. Keep back leg straight and hips low. Rock gently forward to deepen the hip flexor and groin stretch."},
+      {name:"Pigeon",            side:"Right",        dur:30, type:"core", cue:"Right shin forward at an angle, left leg extended back. Square hips toward the floor. Fold forward over the front shin for a deeper stretch. Hold and breathe."},
+      {name:"Pigeon",            side:"Left",         dur:30, type:"core", cue:"Left shin forward at an angle, right leg extended back. Square hips toward the floor. Fold forward over the front shin for a deeper stretch. Hold and breathe."},
     ]},
   { id:"p3", label:"Phase 4", name:"Standing Dynamic Work", subtitle:"Loaded movement patterns", accent:"#da4acd",
     moves:[
-      {name:"Alternating Hip Circles",         side:"Both",  dur:30, type:"core"},
-      {name:"Polka Plus Reverse Lunge",        side:"Right", dur:30, type:"core"},
-      {name:"Polka Plus Reverse Lunge",        side:"Left",  dur:30, type:"core"},
-      {name:"Alternating Double Knee Pulls",   side:"Both",  dur:30, type:"core"},
-      {name:"Alternating Double Quad Stretch", side:"Both",  dur:30, type:"core"},
+      {name:"Alternating Hip Circles",         side:"Both",  dur:30, type:"core", cue:"Stand with feet shoulder-width apart, hands on hips. Draw slow, large circles with your hips — one direction, then the other. Keep upper body relatively still."},
+      {name:"Polka Plus Reverse Lunge",        side:"Right", dur:30, type:"core", cue:"Step right foot back into a reverse lunge, dropping the knee toward the floor. Add a hip flexor stretch at the bottom by tucking the pelvis. Push back to standing."},
+      {name:"Polka Plus Reverse Lunge",        side:"Left",  dur:30, type:"core", cue:"Step left foot back into a reverse lunge, dropping the knee toward the floor. Add a hip flexor stretch at the bottom by tucking the pelvis. Push back to standing."},
+      {name:"Alternating Double Knee Pulls",   side:"Both",  dur:30, type:"core", cue:"Stand tall. Pull one knee up to your chest with both hands, hold briefly, then switch. Alternate sides in a slow, controlled march. Keep your standing leg straight."},
+      {name:"Alternating Double Quad Stretch", side:"Both",  dur:30, type:"core", cue:"Stand on one leg, pull the other foot toward your glute with one or both hands. Hold briefly, then switch. Keep knees together and stand tall."},
     ]},
-  { id:"p4", label:"Phase 5", name:"Floor Recovery", subtitle:"Cooldown & spinal release", accent:"#da8a4a",
+  { id:"p4", label:"Phase 5", name:"Floor Recovery", subtitle:"Ankle, spinal release & posterior shoulder", accent:"#da8a4a",
     moves:[
-      {name:"Alternating Double Pigeon Pull", side:"Both", dur:30, type:"core"},
-      {name:"Spinal Twist",                  side:"Both", dur:30, type:"core"},
-      {name:"Prone Y-T-W",                   side:"Both", dur:30, type:"core"},
+      {name:"Ankle CARs",                      side:"Right", dur:30, type:"core", cue:"Seated or lying, lift the right foot off the floor. Slowly rotate the ankle through its full range — point, circle out, flex, circle in. Move as slowly as possible. Full range every rep."},
+      {name:"Ankle CARs",                      side:"Left",  dur:30, type:"core", cue:"Seated or lying, lift the left foot off the floor. Slowly rotate the ankle through its full range — point, circle out, flex, circle in. Move as slowly as possible. Full range every rep."},
+      {name:"Alternating Double Pigeon Pull",  side:"Both",  dur:30, type:"core", cue:"Lie on back, pull one knee to chest with both hands, then switch. Keep the other leg flat on the floor. Hold each side briefly before alternating."},
+      {name:"Spinal Twist",                    side:"Both",  dur:30, type:"core", cue:"Lie on back, arms out in a T. Drop both knees to one side, letting the spine rotate. Keep shoulders flat on the floor. Hold, then switch sides."},
+      {name:"Prone Y-T-W",                     side:"Both",  dur:30, type:"core", cue:"Lie face down. Lift arms into Y shape (overhead), then T (out to sides), then W (bent, elbows at 90°). Squeeze shoulder blades together on each position. Keep head neutral."},
     ]},
 ];
 const REST = 5;
 const CIRC = 401.92;
 
 // ── STATE ─────────────────────────────────────────────────────────────
-let includeMaybe = false;
 let stage = "idle";
 let idx = 0;
 let tLeft = 0;
@@ -302,8 +294,7 @@ let ivl = null;
 let actx = null;
 
 function moves() {
-  return PHASES.flatMap(p => p.moves.map(m => ({...m, phase:p})))
-               .filter(m => m.type === "core" || includeMaybe);
+  return PHASES.flatMap(p => p.moves.map(m => ({...m, phase:p})));
 }
 
 function fmt(s) {
@@ -463,6 +454,7 @@ function paint() {
     dn.textContent=cur?.name||"";
     dn.style.color=cur?.phase?.accent||"#4a9eda";
     document.getElementById("mds").textContent=cur?.side||"";
+    document.getElementById("mcue").textContent=cur?.cue||"";
   }
 
   // progress
@@ -493,13 +485,17 @@ function showDone() {
   document.getElementById("done-sub").textContent=`${moves().length} moves completed. Nice work.`;
 }
 
+function toggleCue(el) {
+  el.classList.toggle("open");
+}
+
 function renderRef() {
   const ms=moves();
   document.getElementById("sv-time").textContent=fmt(totalTime(ms));
   document.getElementById("sv-moves").textContent=ms.length;
 
   document.getElementById("phase-list").innerHTML=PHASES.map(p=>{
-    const pm=p.moves.filter(m=>m.type==="core"||includeMaybe);
+    const pm=p.moves.filter(m=>m.type==="core");
     if(!pm.length) return "";
     const pt=pm.reduce((a,m)=>a+m.dur,0)+(pm.length-1)*REST;
     return `<div class="phase-block" style="border-color:${p.accent}">
@@ -509,11 +505,15 @@ function renderRef() {
         <div class="ptime">${fmt(pt)}</div>
       </div>
       <div class="psub">${p.subtitle}</div>
-      ${pm.map((m,i)=>`<div class="mr${m.type==="maybe"?" maybe":""}">
-        <div class="mn">${i+1}</div>
-        <div class="mm">${m.name}${m.type==="maybe"?'<span class="badge">maybe</span>':""}</div>
-        <div class="ms">${m.side}</div>
-        <div class="md">30 SEC</div>
+      ${pm.map((m,i)=>`<div class="mr" onclick="toggleCue(this)">
+        <div class="mr-top">
+          <div class="mn">${i+1}</div>
+          <div class="mm">${m.name}</div>
+          <div class="ms">${m.side}</div>
+          <div class="md">30 SEC</div>
+          <div class="mr-chevron">▶</div>
+        </div>
+        ${m.cue?`<div class="mr-cue">${m.cue}</div>`:""}
       </div>`).join("")}
     </div>`;
   }).join("");
@@ -553,11 +553,6 @@ function goReady() {
   show("ready");
 }
 
-function toggleMaybe() {
-  includeMaybe=!includeMaybe;
-  document.getElementById("mtog").classList.toggle("on",includeMaybe);
-  renderRef();
-}
 
 // ── INIT ──────────────────────────────────────────────────────────────
 goReady();
